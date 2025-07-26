@@ -10,3 +10,13 @@ export const createIssue = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// Get All Issues
+export const getAllIssues = async (req, res) => {
+  try {
+    const issues = await Issue.find();
+    res.json(issues);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
