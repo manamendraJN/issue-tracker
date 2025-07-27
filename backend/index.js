@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import issueRoutes from './routes/issueRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,9 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api', issueRoutes);
+
+// Error Handling Middleware
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
   res.send('Issue Tracker Backend');
