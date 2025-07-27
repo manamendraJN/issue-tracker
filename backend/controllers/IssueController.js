@@ -20,3 +20,14 @@ export const getAllIssues = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Get Issue by ID
+export const getIssueById = async (req, res) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
+    if (!issue) return res.status(404).json({ error: 'Issue not found' });
+    res.json(issue);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
