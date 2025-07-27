@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import issueRoutes from './routes/issueRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+
 
 dotenv.config();
 const app = express();
@@ -20,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api', issueRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error Handling Middleware
 app.use(errorHandler);
