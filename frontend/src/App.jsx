@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
+    <AuthProvider>
       <Router>
         <div className="min-h-screen bg-gray-100">
           <Routes>
@@ -14,6 +16,7 @@ function App() {
           </Routes>
         </div>
       </Router>
+    </AuthProvider>
   );
 }
 
