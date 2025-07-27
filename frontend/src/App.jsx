@@ -3,6 +3,7 @@ import './index.css';
 import AuthProvider from './context/AuthContext';
 import Register from './components/Register';
 import Login from './components/Login';
+import IssueList from './components/IssueList';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
-            <Route path="/issuelist" element={<div>Issue List Placeholder</div>} />
+            <Route path="/issuelist" element={<IssueList/>} />
             <Route path="/createissue" element={<div>Create Issue Placeholder</div>} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
