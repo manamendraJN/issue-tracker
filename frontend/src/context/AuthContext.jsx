@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
 
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
       setToken(response.data.token);
       setUser({ email });
     } catch (err) {
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password) => {
     try {
-      await axios.post('http://localhost:5000/api/register', { email, password });
+      await axios.post('http://localhost:5000/api/auth/register', { email, password });
     } catch (err) {
       throw new Error(err.response?.data?.error || 'Registration failed');
     }
@@ -46,3 +46,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;
