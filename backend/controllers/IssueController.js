@@ -45,3 +45,14 @@ export const updateIssue = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// Delete Issue
+export const deleteIssue = async (req, res) => {
+  try {
+    const issue = await Issue.findByIdAndDelete(req.params.id);
+    if (!issue) return res.status(404).json({ error: 'Issue not found' });
+    res.json({ message: 'Issue deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
