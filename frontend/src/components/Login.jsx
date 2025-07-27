@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
     try {
       await login(formData.email, formData.password);
-      navigate('/');
+      navigate('/issuelist');
     } catch (err) {
       setError(err.message);
     }
