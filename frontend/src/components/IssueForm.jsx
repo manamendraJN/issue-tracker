@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function IssueForm() {
   const [formData, setFormData] = useState({
@@ -29,6 +30,7 @@ function IssueForm() {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/createissue', formData);
+      toast.success('Issue created successfully!');
       navigate('/issuelist');
     } catch (err) {
       if (err.response?.status === 401) {

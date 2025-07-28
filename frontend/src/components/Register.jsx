@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Register() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -16,6 +17,7 @@ function Register() {
     e.preventDefault();
     try {
       await register(formData.email, formData.password);
+      toast.success('Registration successful!');
       navigate('/login');
     } catch (err) {
       setError(err.message);

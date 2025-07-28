@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IssueContext } from '../context/IssueContext';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function IssueDetail() {
   const { id } = useParams();
@@ -41,6 +42,7 @@ function IssueDetail() {
     try {
       const response = await axios.put(`http://localhost:5000/api/updateissue/${id}`, formData);
       updateIssue(response.data);
+      toast.success('Issue updated successfully!');
       setIsEditing(false);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update issue');
@@ -52,6 +54,7 @@ function IssueDetail() {
       try {
         await axios.delete(`http://localhost:5000/api/deleteissue/${id}`);
         deleteIssue(id);
+        toast.success('Issue deleted successfully!');
         navigate('/issuelist');
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to delete issue');

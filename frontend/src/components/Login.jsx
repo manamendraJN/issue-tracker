@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -16,6 +17,7 @@ function Login() {
     e.preventDefault();
     try {
       await login(formData.email, formData.password);
+      toast.success('Login successful!');
       navigate('/issuelist');
     } catch (err) {
       setError(err.message);
