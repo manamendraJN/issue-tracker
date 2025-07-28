@@ -6,6 +6,18 @@ import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaHeading, FaAlignLeft, FaExclamationCircle, FaFlag, FaTasks } from 'react-icons/fa';
 
+// Custom CSS to style select options
+const selectOptionStyles = `
+  select option {
+    background-color: #1f2937;
+    color: white;
+    padding: 8px;
+  }
+  select option:hover {
+    background-color: #374151;
+  }
+`;
+
 function IssueForm({ closeModal }) {
   const [formData, setFormData] = useState({
     title: '',
@@ -46,6 +58,7 @@ function IssueForm({ closeModal }) {
 
   return (
     <div className="flex flex-col">
+      <style>{selectOptionStyles}</style>
       <h2 className="text-2xl font-bold text-white mb-6 tracking-tight">Create New Issue</h2>
       <AnimatePresence>
         {error && (
@@ -119,7 +132,7 @@ function IssueForm({ closeModal }) {
               name="severity"
               value={formData.severity}
               onChange={handleChange}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               whileFocus={{ scale: 1.01 }}
               aria-label="Issue severity"
             >
@@ -140,7 +153,7 @@ function IssueForm({ closeModal }) {
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               whileFocus={{ scale: 1.01 }}
               aria-label="Issue priority"
             >
@@ -150,29 +163,7 @@ function IssueForm({ closeModal }) {
             </motion.select>
           </div>
         </div>
-        <div className="relative">
-          <label htmlFor="status" className="block text-sm font-medium text-gray-200 mb-1">
-            Status
-          </label>
-          <div className="relative">
-            <FaTasks className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <motion.select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
-              whileFocus={{ scale: 1.01 }}
-              aria-label="Issue status"
-            >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Testing">Testing</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Closed">Closed</option>
-            </motion.select>
-          </div>
-        </div>
+
         <div className="flex gap-4">
           <motion.button
             type="button"

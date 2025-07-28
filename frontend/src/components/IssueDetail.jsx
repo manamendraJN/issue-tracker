@@ -228,7 +228,7 @@ function IssueDetail() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 rounded-2xl bg-black/70 flex items-center justify-center p-4 z-50"
               onClick={closeModal}
             >
               <motion.div
@@ -250,14 +250,14 @@ function IssueDetail() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-1">Title</label>
-                      <div className="flex items-center text-white text-sm bg-white/5 border border-gray-600 rounded-lg p-3">
+                      <div className="flex items-center text-white text-sm bg-white/15 border border-gray-600 rounded-lg p-3">
                         <FaHeading className="mr-3 text-gray-400" />
                         {formData.title || ''}
                       </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-1">Description</label>
-                      <div className="flex text-white text-sm bg-white/5 border border-gray-600 rounded-lg p-3">
+                      <div className="flex text-white text-sm bg-white/15 border border-gray-600 rounded-lg p-3">
                         <FaAlignLeft className="mr-3 text-gray-400 mt-1" />
                         <span className="whitespace-pre-wrap">{formData.description || ''}</span>
                       </div>
@@ -328,25 +328,15 @@ function IssueDetail() {
                       </div>
                     </div>
                     <div className="flex gap-4">
-                      <motion.button
-                        type="button"
-                        onClick={handleSubmit}
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 text-base font-medium"
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        aria-label="Save changes"
-                      >
+                      <motion.button onClick={handleSubmit}
+                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center"
+                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                         <FaSave className="mr-2" />
                         Save Changes
                       </motion.button>
-                      <motion.button
-                        type="button"
-                        onClick={closeModal}
-                        className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 text-base font-medium"
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        aria-label="Cancel"
-                      >
+                      <motion.button onClick={closeModal}
+                        className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center"
+                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                         <FaTimes className="mr-2" />
                         Cancel
                       </motion.button>
