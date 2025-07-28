@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { IssueContext } from '../context/IssueContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 function IssueDetail() {
   const { id } = useParams();
@@ -62,116 +63,195 @@ function IssueDetail() {
     }
   };
 
-  if (loadingIssues) return <p className="container mx-auto p-4">Loading...</p>;
-  if (error) return <p className="container mx-auto p-4 text-red-500">{error}</p>;
-  if (!issue) return <p className="container mx-auto p-4">Issue not found</p>;
+  if (loadingIssues) {
+    return (
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="container mx-auto p-4 text-gray-500 text-lg"
+      >
+        Loading...
+      </motion.p>
+    );
+  }
+
+  if (error) {
+    return (
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="container mx-auto p-4 text-red-500 bg-red-50 p-3 rounded-lg"
+      >
+        {error}
+      </motion.p>
+    );
+  }
+
+  if (!issue) {
+    return (
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="container mx-auto p-4 text-gray-500 text-lg"
+      >
+        Issue not found
+      </motion.p>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h2 className="text-2xl font-bold mb-4">{issue.title}</h2>
-      {!isEditing ? (
-        <>
-          <p className="text-gray-600 mb-4">{issue.description}</p>
-          <div className="mt-2 text-sm">
-            <span className="mr-4"><strong>Severity:</strong> {issue.severity}</span>
-            <span className="mr-4"><strong>Priority:</strong> {issue.priority}</span>
-            <span><strong>Status:</strong> {issue.status}</span>
-          </div>
-          <button
-            onClick={() => setIsEditing(true)}
-            className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 mr-2"
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Delete
-          </button>
-        </>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title || ''}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Description</label>
-            <textarea
-              name="description"
-              value={formData.description || ''}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Severity</label>
-            <select
-              name="severity"
-              value={formData.severity || 'Low'}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Priority</label>
-            <select
-              name="priority"
-              value={formData.priority || 'Low'}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Status</label>
-            <select
-              name="status"
-              value={formData.status || 'Open'}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Testing">Testing</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Closed">Closed</option>
-            </select>
-          </div>
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Save Changes
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsEditing(false)}
-            className="ml-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-          >
-            Cancel
-          </button>
-        </form>
-      )}
-      <button
-        onClick={() => navigate('/issuelist')}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-8"
       >
-        Back to List
-      </button>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">{issue.title}</h2>
+        {!isEditing ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <p className="text-gray-600 mb-4">{issue.description}</p>
+            <div className="text-sm text-gray-500 flex flex-wrap gap-4 mb-6">
+              <span><strong>Severity:</strong> {issue.severity}</span>
+              <span><strong>Priority:</strong> {issue.priority}</span>
+              <span><strong>Status:</strong> {issue.status}</span>
+            </div>
+            <div className="flex gap-3">
+              <motion.button
+                onClick={() => setIsEditing(true)}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Edit
+              </motion.button>
+              <motion.button
+                onClick={handleDelete}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Delete
+              </motion.button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Title</label>
+              <motion.input
+                type="text"
+                name="title"
+                value={formData.title || ''}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+                placeholder="Enter issue title"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <motion.textarea
+                name="description"
+                value={formData.description || ''}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 resize-y"
+                rows="5"
+                whileFocus={{ scale: 1.02 }}
+                placeholder="Describe the issue"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Severity</label>
+              <motion.select
+                name="severity"
+                value={formData.severity || 'Low'}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </motion.select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Priority</label>
+              <motion.select
+                name="priority"
+                value={formData.priority || 'Low'}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </motion.select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Status</label>
+              <motion.select
+                name="status"
+                value={formData.status || 'Open'}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+              >
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Testing">Testing</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </motion.select>
+            </div>
+            <div className="flex gap-3">
+              <motion.button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Save Changes
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setIsEditing(false)}
+                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.form>
+        )}
+        <motion.p
+          className="mt-6 text-center text-gray-600"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <a
+            href="/issuelist"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Back to Issues
+          </a>
+        </motion.p>
+      </motion.div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -25,39 +26,92 @@ function Login() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Login
-        </button>
-      </form>
-      <p className="mt-4">
-        Don't have an account? <a href="/register" className="text-blue-600">Register</a>
-      </p>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="flex w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden">
+        {/* Left Issue Tracker Box */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-1/3 bg-blue-600 text-white p-8 flex flex-col justify-between"
+        >
+          <div>
+            <h3 className="text-2xl font-bold mb-4">Issue Tracker</h3>
+            <p className="text-sm opacity-90">
+              Manage your projects efficiently. Track issues, assign tasks, and stay organized with our intuitive platform.
+            </p>
+          </div>
+          <div className="mt-6">
+            <p className="text-xs opacity-75">Trusted by teams worldwide</p>
+            <div className="flex gap-2 mt-2">
+              <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-200"></span>
+              <span className="inline-block w-2 h-2 bg-red-400 rounded-full animate-pulse delay-400"></span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Login Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-2/3 p-8"
+        >
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">Welcome Back</h2>
+          {error && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-500 mb-4 bg-red-50 p-3 rounded-lg"
+            >
+              {error}
+            </motion.p>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <motion.input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <motion.input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                whileFocus={{ scale: 1.02 }}
+                placeholder="Enter your password"
+              />
+            </div>
+            <motion.button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Login
+            </motion.button>
+          </form>
+          <p className="mt-6 text-center text-gray-600">
+            Don't have an account?{' '}
+            <a href="/register" className="text-blue-600 hover:underline font-medium">
+              Register
+            </a>
+          </p>
+        </motion.div>
+      </div>
     </div>
   );
 }

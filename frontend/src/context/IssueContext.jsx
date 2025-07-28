@@ -9,20 +9,35 @@ const IssueProvider = ({ children }) => {
   const [issues, setIssues] = useState([]);
   const [loadingIssues, setLoadingIssues] = useState(true);
 
+  const fetchIssues = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/getallissues', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setIssues(response.data);
+    } catch (err) {
+      console.error('Failed to fetch issues:', err);
+    } finally {
+      setLoadingIssues(false);
+    }
+  };
+
   useEffect(() => {
-    if (loading || !user || !token) return; // Wait for token to be set
-    const fetchIssues = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/getallissues');
-        setIssues(response.data);
-      } catch (err) {
-        console.error('Failed to fetch issues:', err);
-      } finally {
-        setLoadingIssues(false);
-      }
-    };
+    if (loading || !user || !token) return;
     fetchIssues();
   }, [user, loading, token]);
+
+  const addIssue = async (issueData) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/createissue', issueData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setIssues([response.data, ...issues]);
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const updateIssue = (updatedIssue) => {
     setIssues(issues.map(issue => issue._id === updatedIssue._id ? updatedIssue : issue));
@@ -33,9 +48,10 @@ const IssueProvider = ({ children }) => {
   };
 
   return (
-    <IssueContext.Provider value={{ issues, loadingIssues, updateIssue, deleteIssue }}>
+    <IssueContext.Provider value={{ issues, loadingIssues, addIssue, updateIssue, deleteIssue }}>
       {children}
     </IssueContext.Provider>
   );
 };
+
 export default IssueProvider;

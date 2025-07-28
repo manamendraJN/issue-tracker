@@ -16,7 +16,7 @@ function App() {
     <AuthProvider>
       <IssueProvider>
         <Router>
-          <div className="min-h-screen bg-gray-100">
+          <div className="min-h-screen bg-gray-100 pt-16">
             <Navbar />
             <ToastContainer
               position="bottom-left"
