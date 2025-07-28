@@ -19,23 +19,7 @@ function IssueList() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Issues</h2>
-        {user && (
-          <div>
-            <span className="mr-4">Welcome, {user.email}</span>
-            <button
-              onClick={() => {
-                logout();
-                navigate('/login');
-              }}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Logout
-            </button>
-          </div>
-        )}
-      </div>
+
       {error && (
         <p className="text-red-500 mb-4">
           {error}

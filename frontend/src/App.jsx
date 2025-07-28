@@ -9,6 +9,7 @@ import Login from './components/Login';
 import IssueList from './components/IssueList';
 import IssueForm from './components/IssueForm';
 import IssueDetail from './components/IssueDetail';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <IssueProvider>
         <Router>
           <div className="min-h-screen bg-gray-100">
+            <Navbar />
             <ToastContainer
               position="bottom-left"
               autoClose={2000}
