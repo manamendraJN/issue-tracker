@@ -1,25 +1,30 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css';
 import AuthProvider from './context/AuthContext';
+import IssueProvider from './context/IssueContext';
 import Register from './components/Register';
 import Login from './components/Login';
 import IssueList from './components/IssueList';
 import IssueForm from './components/IssueForm';
+import IssueDetail from './components/IssueDetail';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-100">
-          <Routes>
-            <Route path="/login" element={<Login/>} />
-            <Route path="/register" element={<Register/>} />
-            <Route path="/issuelist" element={<IssueList/>} />
-            <Route path="/createissue" element={<IssueForm/>} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        </div>
-      </Router>
+      <IssueProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-100">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/issuelist" element={<IssueList />} />
+              <Route path="/createissue" element={<IssueForm />} />
+              <Route path="/issuedetail/:id" element={<IssueDetail />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </div>
+        </Router>
+      </IssueProvider>
     </AuthProvider>
   );
 }
