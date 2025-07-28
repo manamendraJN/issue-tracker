@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaHeading, FaAlignLeft, FaExclamationCircle, FaFlag, FaTasks, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import API_URL from '../config';
 
 // Custom CSS to style select options
 const selectOptionStyles = `
@@ -36,7 +37,7 @@ function IssueDetail() {
     } else {
       const fetchIssue = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/getissuebyid/${id}`);
+          const response = await axios.get(`${API_URL}/getissuebyid/${id}`);
           setIssue(response.data);
           setFormData(response.data);
         } catch (err) {
@@ -54,7 +55,7 @@ function IssueDetail() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5000/api/updateissue/${id}`, {
+      const response = await axios.put(`${API_URL}/updateissue/${id}`, {
         ...formData,
         title: issue.title, // Ensure title remains unchanged
         description: issue.description // Ensure description remains unchanged
@@ -70,7 +71,7 @@ function IssueDetail() {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this issue?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/deleteissue/${id}`);
+        await axios.delete(`${API_URL}/deleteissue/${id}`);
         deleteIssue(id);
         toast.success('Issue deleted successfully!');
         navigate('/issuelist');

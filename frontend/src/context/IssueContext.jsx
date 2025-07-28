@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 import axios from 'axios';
+import API_URL from '../config';
 
 export const IssueContext = createContext();
 
@@ -11,7 +12,7 @@ const IssueProvider = ({ children }) => {
 
   const fetchIssues = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/getallissues', {
+      const response = await axios.get(`${API_URL}/getallissues`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setIssues(response.data);
@@ -29,7 +30,7 @@ const IssueProvider = ({ children }) => {
 
   const addIssue = async (issueData) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/createissue', issueData, {
+      const response = await axios.post(`${API_URL}/createissue`, issueData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setIssues([response.data, ...issues]);

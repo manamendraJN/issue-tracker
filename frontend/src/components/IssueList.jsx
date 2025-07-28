@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaTimes, FaSearch } from 'react-icons/fa';
 import IssueForm from './IssueForm';
+import API_URL from '../config';
 
 // Custom CSS to style select options
 const selectOptionStyles = `
