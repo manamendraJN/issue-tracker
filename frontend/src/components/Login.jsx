@@ -2,7 +2,8 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -26,92 +27,128 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="flex w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden">
-        {/* Left Issue Tracker Box */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="w-full max-w-4xl bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+      >
+        {/* Left Branding Panel */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-1/3 bg-blue-600 text-white p-8 flex flex-col justify-between"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="md:w-1/3 bg-gradient-to-b from-blue-600 to-blue-800 text-white p-8 flex flex-col justify-between"
         >
           <div>
-            <h3 className="text-2xl font-bold mb-4">Issue Tracker</h3>
-            <p className="text-sm opacity-90">
-              Manage your projects efficiently. Track issues, assign tasks, and stay organized with our intuitive platform.
+            <h3 className="text-3xl font-bold tracking-tight mb-4">IssueSync</h3>
+            <p className="text-sm leading-relaxed opacity-90">
+              Streamline your workflow with our cutting-edge issue tracking platform. Collaborate seamlessly, track progress, and achieve project excellence.
             </p>
           </div>
           <div className="mt-6">
-            <p className="text-xs opacity-75">Trusted by teams worldwide</p>
-            <div className="flex gap-2 mt-2">
-              <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-              <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-200"></span>
-              <span className="inline-block w-2 h-2 bg-red-400 rounded-full animate-pulse delay-400"></span>
+            <p className="text-xs opacity-75">Powering teams globally</p>
+            <div className="flex gap-3 mt-3">
+              <motion.span
+                className="w-2.5 h-2.5 bg-green-400 rounded-full"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              />
+              <motion.span
+                className="w-2.5 h-2.5 bg-yellow-400 rounded-full"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5, delay: 0.3 }}
+              />
+              <motion.span
+                className="w-2.5 h-2.5 bg-red-400 rounded-full"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5, delay: 0.6 }}
+              />
             </div>
           </div>
         </motion.div>
 
-        {/* Login Form */}
+        {/* Login Form Panel */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-2/3 p-8"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="md:w-2/3 p-8 sm:p-10 lg:p-12"
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Welcome Back</h2>
-          {error && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-500 mb-4 bg-red-50 p-3 rounded-lg"
-            >
-              {error}
-            </motion.p>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <motion.input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                whileFocus={{ scale: 1.02 }}
-                placeholder="Enter your email"
-              />
+          <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Sign In</h2>
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="text-red-300 bg-red-500/20 p-4 rounded-lg mb-6 text-sm"
+              >
+                {error}
+              </motion.p>
+            )}
+          </AnimatePresence>
+          <div className="space-y-6">
+            <div className="relative">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <motion.input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-white focus:outline-none transition-all duration-300"
+                  placeholder="Enter your email"
+                  whileFocus={{ scale: 1.01 }}
+                  aria-label="Email address"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <motion.input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                whileFocus={{ scale: 1.02 }}
-                placeholder="Enter your password"
-              />
+            <div className="relative">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <motion.input
+                  id="password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-white focus:outline-none transition-all duration-300"
+                  placeholder="Enter your password"
+                  whileFocus={{ scale: 1.01 }}
+                  aria-label="Password"
+                />
+              </div>
             </div>
             <motion.button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              type="button"
+              onClick={handleSubmit}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 text-base font-medium"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              aria-label="Sign in"
             >
-              Login
+              Sign In
             </motion.button>
-          </form>
-          <p className="mt-6 text-center text-gray-600">
-            Don't have an account?{' '}
-            <a href="/register" className="text-blue-600 hover:underline font-medium">
-              Register
+          </div>
+          <p className="mt-6 text-center text-gray-300 text-sm">
+            New to IssueSync?{' '}
+            <a href="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+              Create an account
             </a>
           </p>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }

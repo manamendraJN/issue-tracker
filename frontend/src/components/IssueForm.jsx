@@ -3,9 +3,10 @@ import { AuthContext } from '../context/AuthContext';
 import { IssueContext } from '../context/IssueContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaHeading, FaAlignLeft, FaExclamationCircle, FaFlag, FaTasks } from 'react-icons/fa';
 
-function IssueForm() {
+function IssueForm({ closeModal }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -33,10 +34,10 @@ function IssueForm() {
     try {
       await addIssue(formData);
       toast.success('Issue created successfully!');
-      navigate('/issuelist');
+      closeModal();
     } catch (err) {
       if (err.response?.status === 401) {
-        setError('Session expired. Please log in again.');
+        setError('Session expired. Please sign in again.');
       } else {
         setError(err.response?.data?.error || 'Failed to create issue');
       }
@@ -44,94 +45,125 @@ function IssueForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-8"
-      >
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Create New Issue</h2>
+    <div className="flex flex-col">
+      <h2 className="text-2xl font-bold text-white mb-6 tracking-tight">Create New Issue</h2>
+      <AnimatePresence>
         {error && (
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-red-500 mb-6 bg-red-50 p-3 rounded-lg flex items-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="text-red-300 bg-red-500/20 p-3 rounded-lg mb-4 text-sm flex items-center"
           >
             {error}
             {error.includes('Session expired') && (
               <button
                 onClick={() => navigate('/login')}
-                className="ml-4 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-all duration-300"
+                className="ml-4 bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
               >
-                Log In Again
+                Sign In Again
               </button>
             )}
           </motion.p>
         )}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Title</label>
+      </AnimatePresence>
+      <div className="space-y-4">
+        <div className="relative">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-200 mb-1">
+            Title
+          </label>
+          <div className="relative">
+            <FaHeading className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <motion.input
+              id="title"
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               required
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-              whileFocus={{ scale: 1.02 }}
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               placeholder="Enter issue title"
+              whileFocus={{ scale: 1.01 }}
+              aria-label="Issue title"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+        </div>
+        <div className="relative">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-1">
+            Description
+          </label>
+          <div className="relative">
+            <FaAlignLeft className="absolute left-3 top-3 text-gray-400" />
             <motion.textarea
+              id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               required
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 resize-y"
-              rows="5"
-              whileFocus={{ scale: 1.02 }}
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-y"
+              rows="4"
               placeholder="Describe the issue"
+              whileFocus={{ scale: 1.01 }}
+              aria-label="Issue description"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Severity</label>
+        </div>
+        <div className="relative">
+          <label htmlFor="severity" className="block text-sm font-medium text-gray-200 mb-1">
+            Severity
+          </label>
+          <div className="relative">
+            <FaExclamationCircle className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <motion.select
+              id="severity"
               name="severity"
               value={formData.severity}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-              whileFocus={{ scale: 1.02 }}
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+              whileFocus={{ scale: 1.01 }}
+              aria-label="Issue severity"
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </motion.select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Priority</label>
+        </div>
+        <div className="relative">
+          <label htmlFor="priority" className="block text-sm font-medium text-gray-200 mb-1">
+            Priority
+          </label>
+          <div className="relative">
+            <FaFlag className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <motion.select
+              id="priority"
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-              whileFocus={{ scale: 1.02 }}
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+              whileFocus={{ scale: 1.01 }}
+              aria-label="Issue priority"
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </motion.select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Status</label>
+        </div>
+        <div className="relative">
+          <label htmlFor="status" className="block text-sm font-medium text-gray-200 mb-1">
+            Status
+          </label>
+          <div className="relative">
+            <FaTasks className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <motion.select
+              id="status"
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-              whileFocus={{ scale: 1.02 }}
+              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+              whileFocus={{ scale: 1.01 }}
+              aria-label="Issue status"
             >
               <option value="Open">Open</option>
               <option value="In Progress">In Progress</option>
@@ -140,21 +172,30 @@ function IssueForm() {
               <option value="Closed">Closed</option>
             </motion.select>
           </div>
+        </div>
+        <div className="flex gap-4">
           <motion.button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            type="button"
+            onClick={handleSubmit}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 text-base font-medium"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            aria-label="Create issue"
           >
             Create Issue
           </motion.button>
-        </form>
-        <p className="mt-6 text-center text-gray-600">
-          <a href="/issuelist" className="text-blue-600 hover:underline font-medium">
-            Back to Issues
-          </a>
-        </p>
-      </motion.div>
+          <motion.button
+            type="button"
+            onClick={closeModal}
+            className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 text-base font-medium"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            aria-label="Cancel"
+          >
+            Cancel
+          </motion.button>
+        </div>
+      </div>
     </div>
   );
 }

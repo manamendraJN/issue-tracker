@@ -16,7 +16,7 @@ function App() {
     <AuthProvider>
       <IssueProvider>
         <Router>
-          <div className="min-h-screen bg-gray-100 pt-16">
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
             <Navbar />
             <ToastContainer
               position="bottom-left"
