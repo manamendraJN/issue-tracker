@@ -4,6 +4,7 @@ import AuthProvider from './context/AuthContext';
 import Register from './components/Register';
 import Login from './components/Login';
 import IssueList from './components/IssueList';
+import IssueForm from './components/IssueForm';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
             <Route path="/issuelist" element={<IssueList/>} />
-            <Route path="/createissue" element={<div>Create Issue Placeholder</div>} />
+            <Route path="/createissue" element={<IssueForm/>} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </div>
