@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 function IssueList() {
   const [issues, setIssues] = useState([]);
   const [error, setError] = useState(null);
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (loading) return; // Wait for AuthContext to settle
     if (!user) {
       navigate('/login');
       return;
@@ -20,15 +21,14 @@ function IssueList() {
         setIssues(response.data);
       } catch (err) {
         if (err.response?.status === 401) {
-          logout();
-          navigate('/login');
+          setError('Session expired. Please log in again.');
         } else {
           setError(err.response?.data?.error || 'Failed to fetch issues');
         }
       }
     };
     fetchIssues();
-  }, [user, navigate, logout]);
+  }, [user, navigate, logout, loading]);
 
   return (
     <div className="container mx-auto p-4">
@@ -49,8 +49,20 @@ function IssueList() {
           </div>
         )}
       </div>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {issues.length === 0 ? (
+      {error && (
+        <p className="text-red-500 mb-4">
+          {error}
+          {error.includes('Session expired') && (
+            <button
+              onClick={() => navigate('/login')}
+              className="ml-2 bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+            >
+              Log In Again
+            </button>
+          )}
+        </p>
+      )}
+      {issues.length === 0 && !error ? (
         <p className="text-gray-500">No issues found.</p>
       ) : (
         <div className="grid gap-4">
