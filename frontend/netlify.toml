@@ -1,4 +1,5 @@
 [build]
+  base = "frontend"
   command = "npm install && npm run build"
-  publish = "dist"
-  base = "."
+  publish = "frontend/dist"
+  environment = { VITE_API_URL = "https://issue-tracker-backend-p4pk.onrender.com/api" }
