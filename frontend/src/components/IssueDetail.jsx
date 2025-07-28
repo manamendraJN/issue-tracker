@@ -5,7 +5,7 @@ import axios from 'axios';
 
 function IssueDetail() {
   const { id } = useParams();
-  const { issues, updateIssue, loadingIssues } = useContext(IssueContext);
+  const { issues, updateIssue, deleteIssue, loadingIssues } = useContext(IssueContext);
   const [issue, setIssue] = useState(null);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -47,6 +47,18 @@ function IssueDetail() {
     }
   };
 
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this issue?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/deleteissue/${id}`);
+        deleteIssue(id);
+        navigate('/issuelist');
+      } catch (err) {
+        setError(err.response?.data?.error || 'Failed to delete issue');
+      }
+    }
+  };
+
   if (loadingIssues) return <p className="container mx-auto p-4">Loading...</p>;
   if (error) return <p className="container mx-auto p-4 text-red-500">{error}</p>;
   if (!issue) return <p className="container mx-auto p-4">Issue not found</p>;
@@ -64,9 +76,15 @@ function IssueDetail() {
           </div>
           <button
             onClick={() => setIsEditing(true)}
-            className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+            className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 mr-2"
           >
             Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            className="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Delete
           </button>
         </>
       ) : (
