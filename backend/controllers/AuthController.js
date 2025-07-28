@@ -21,12 +21,21 @@ export const login = async (req, res, next) => {
     if (!email || !password) {
       throw new Error('Email and password are required');
     }
+
     const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password))) {
       throw new Error('Invalid email or password');
     }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+
+    res.json({
+      token,
+      user: {
+        _id: user._id,
+        email: user.email
+      }
+    });
   } catch (err) {
     next(err);
   }
