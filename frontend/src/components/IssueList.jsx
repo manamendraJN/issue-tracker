@@ -3,13 +3,29 @@ import { AuthContext } from '../context/AuthContext';
 import { IssueContext } from '../context/IssueContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlus, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { FaPlus, FaTimes, FaSearch } from 'react-icons/fa';
 import IssueForm from './IssueForm';
+
+// Custom CSS to style select options
+const selectOptionStyles = `
+  select option {
+    background-color: #1f2937;
+    color: white;
+    padding: 8px;
+  }
+  select option:hover {
+    background-color: #374151;
+  }
+`;
 
 function IssueList() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, loading } = useContext(AuthContext);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterSeverity, setFilterSeverity] = useState('');
+  const [filterPriority, setFilterPriority] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const { user, loading } = useContext(AuthContext);
   const { issues, loadingIssues } = useContext(IssueContext);
   const navigate = useNavigate();
 
@@ -24,8 +40,20 @@ function IssueList() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // Filter issues based on search term and dropdown selections
+  const filteredIssues = issues.filter((issue) => {
+    const matchesSearch =
+      issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSeverity = !filterSeverity || issue.severity === filterSeverity;
+    const matchesPriority = !filterPriority || issue.priority === filterPriority;
+    const matchesStatus = !filterStatus || issue.status === filterStatus;
+    return matchesSearch && matchesSeverity && matchesPriority && matchesStatus;
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <style>{selectOptionStyles}</style>
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -45,6 +73,68 @@ function IssueList() {
               <FaPlus className="mr-2" />
               New Issue
             </motion.button>
+          </div>
+        </div>
+
+        {/* Search and Filter Controls */}
+        <div className="mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <motion.input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search issues ..."
+                className="w-full pl-10 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                whileFocus={{ scale: 1.01 }}
+                aria-label="Search issues"
+              />
+            </div>
+            <div className="relative">
+              <motion.select
+                value={filterSeverity}
+                onChange={(e) => setFilterSeverity(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                whileFocus={{ scale: 1.01 }}
+                aria-label="Filter by severity"
+              >
+                <option value="">All Severities</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </motion.select>
+            </div>
+            <div className="relative">
+              <motion.select
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                whileFocus={{ scale: 1.01 }}
+                aria-label="Filter by priority"
+              >
+                <option value="">All Priorities</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </motion.select>
+            </div>
+            <div className="relative">
+              <motion.select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 bg-white/5 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                whileFocus={{ scale: 1.01 }}
+                aria-label="Filter by status"
+              >
+                <option value="">All Statuses</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Testing">Testing</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </motion.select>
+            </div>
           </div>
         </div>
 
@@ -77,77 +167,74 @@ function IssueList() {
           >
             Loading issues...
           </motion.p>
-        ) : issues.length === 0 ? (
+        ) : filteredIssues.length === 0 ? (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-gray-300 text-lg text-center"
           >
-            No issues found. Start by creating a new issue!
+            {searchTerm || filterSeverity || filterPriority || filterStatus
+              ? 'No issues match your filters.'
+              : 'No issues found. Start by creating a new issue!'}
           </motion.p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {issues.map((issue) => (
+            {filteredIssues.map((issue) => (
               <Link to={`/issuedetail/${issue._id}`} key={issue._id}>
-              <motion.div
-                key={issue._id}
-                initial={{ opacity: 0, y: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="border border-gray-700 rounded-lg p-5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 mt-4"
-              >
-                <h3 className="text-lg font-semibold text-white mb-2">
-
-                    {issue.title}
-
-                </h3>
-                <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{issue.description}</p>
-                <div className="text-sm text-gray-400 flex flex-wrap gap-4">
-                  <span>
-                    <strong>Severity:</strong>{' '}
-                    <span
-                      className={
-                        issue.severity === 'High'
-                          ? 'text-red-400'
-                          : issue.severity === 'Medium'
-                          ? 'text-yellow-400'
-                          : 'text-green-400'
-                      }
-                    >
-                      {issue.severity}
-                    </span>
-                  </span>
-                  <span>
-                    <strong>Priority:</strong>{' '}
-                    <span
-                      className={
-                        issue.priority === 'High'
-                          ? 'text-red-400'
-                          : issue.priority === 'Medium'
-                          ? 'text-yellow-400'
-                          : 'text-green-400'
+                <motion.div
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="border border-gray-700 rounded-lg p-5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 mt-4"
+                >
+                  <h3 className="text-lg font-semibold text-white mb-2">{issue.title}</h3>
+                  <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{issue.description}</p>
+                  <div className="text-sm text-gray-400 flex flex-wrap gap-4">
+                    <span>
+                      <strong>Severity:</strong>{' '}
+                      <span
+                        className={
+                          issue.severity === 'High'
+                            ? 'text-red-400'
+                            : issue.severity === 'Medium'
+                            ? 'text-yellow-400'
+                            : 'text-green-400'
                         }
-                    >
-                      {issue.priority}
+                      >
+                        {issue.severity}
+                      </span>
                     </span>
-                  </span>
-                  <span>
-                    <strong>Status:</strong>{' '}
-                    <span
-                      className={
-                        issue.status === 'Open'
-                          ? 'text-blue-400'
-                          : issue.status === 'In Progress'
-                          ? 'text-yellow-400'
-                          : 'text-green-400'
-                      }
-                    >
-                      {issue.status}
+                    <span>
+                      <strong>Priority:</strong>{' '}
+                      <span
+                        className={
+                          issue.priority === 'High'
+                            ? 'text-red-400'
+                            : issue.priority === 'Medium'
+                            ? 'text-yellow-400'
+                            : 'text-green-400'
+                        }
+                      >
+                        {issue.priority}
+                      </span>
                     </span>
-                  </span>
-                </div>
-              </motion.div>
-                                </Link>
+                    <span>
+                      <strong>Status:</strong>{' '}
+                      <span
+                        className={
+                          issue.status === 'Open'
+                            ? 'text-blue-400'
+                            : issue.status === 'In Progress'
+                            ? 'text-yellow-400'
+                            : 'text-green-400'
+                        }
+                      >
+                        {issue.status}
+                      </span>
+                    </span>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         )}
@@ -158,7 +245,7 @@ function IssueList() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/30 flex rounded-2xl items-center justify-center p-4 z-50 "
+              className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
               onClick={closeModal}
             >
               <motion.div
