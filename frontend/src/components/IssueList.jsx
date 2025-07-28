@@ -3,10 +3,12 @@ import { AuthContext } from '../context/AuthContext';
 import { IssueContext } from '../context/IssueContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaPlus, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import IssueForm from './IssueForm';
 
 function IssueList() {
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, logout, loading } = useContext(AuthContext);
   const { issues, loadingIssues } = useContext(IssueContext);
   const navigate = useNavigate();
@@ -19,6 +21,9 @@ function IssueList() {
     }
   }, [user, navigate, loading, loadingIssues]);
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
@@ -30,8 +35,8 @@ function IssueList() {
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-white tracking-tight">Your Issues</h2>
           <div className="flex gap-4">
-            <motion.a
-              href="/createissue"
+            <motion.button
+              onClick={openModal}
               className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -39,7 +44,7 @@ function IssueList() {
             >
               <FaPlus className="mr-2" />
               New Issue
-            </motion.a>
+            </motion.button>
           </div>
         </div>
 
@@ -88,7 +93,7 @@ function IssueList() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="border border-gray-700 rounded-lg p-5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
+                className="border border-gray-700 rounded-lg p-5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 mt-4"
               >
                 <h3 className="text-lg font-semibold text-white mb-2">
                   <Link
@@ -147,6 +152,35 @@ function IssueList() {
             ))}
           </div>
         )}
+
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 flex rounded-2xl items-center justify-center p-4 z-50 "
+              onClick={closeModal}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="relative w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl p-6 mt-14"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
+                  aria-label="Close modal"
+                >
+                  <FaTimes size={24} />
+                </button>
+                <IssueForm closeModal={closeModal} />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
