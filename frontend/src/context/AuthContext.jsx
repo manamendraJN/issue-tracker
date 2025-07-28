@@ -4,24 +4,37 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  // Initialize from localStorage on mount
+  const storedToken = localStorage.getItem('token');
+  const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+  const [user, setUser] = useState(storedUser);
+  const [token, setToken] = useState(storedToken);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
     } else {
       delete axios.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
-  }, [token]);
+    setLoading(false); // Done loading after initial setup
+  }, [token, user]);
 
   const login = async (email, password) => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      setToken(response.data.token);
-      setUser({ email });
+      const newToken = response.data.token;
+      const userObj = { email };
+      setToken(newToken);
+      setUser(userObj);
+      localStorage.setItem('token', newToken);
+      localStorage.setItem('user', JSON.stringify(userObj));
     } catch (err) {
       throw new Error(err.response?.data?.error || 'Login failed');
     }
@@ -38,10 +51,11 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
+    setLoading(false); // Reset loading
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
