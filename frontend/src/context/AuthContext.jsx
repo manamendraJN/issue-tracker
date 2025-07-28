@@ -4,18 +4,18 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // Initialize from localStorage on mount
   const storedToken = localStorage.getItem('token');
   const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-  const [user, setUser] = useState(storedUser);
+
+  const [user, setUser] = useState(storedUser); // Will store { _id, email }
   const [token, setToken] = useState(storedToken);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
-      if (user) {
+      if (user?._id && user?.email) {
         localStorage.setItem('user', JSON.stringify(user));
       }
     } else {
@@ -23,14 +23,15 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }
-    setLoading(false); // Done loading after initial setup
+    setLoading(false);
   }, [token, user]);
 
   const login = async (email, password) => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
       const newToken = response.data.token;
-      const userObj = { email };
+      const userObj = response.data.user; // { _id, email }
+
       setToken(newToken);
       setUser(userObj);
       localStorage.setItem('token', newToken);
@@ -51,7 +52,9 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    setLoading(false); // Reset loading
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setLoading(false);
   };
 
   return (
