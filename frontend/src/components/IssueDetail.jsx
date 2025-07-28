@@ -191,28 +191,29 @@ function IssueDetail() {
               </span>
             </span>
           </div>
-          <div className="flex gap-3">
-            <motion.button
-              onClick={openModal}
-              className="flex items-center bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              aria-label="Edit issue"
-            >
-              <FaEdit className="mr-2" />
-              Edit
-            </motion.button>
-            <motion.button
-              onClick={handleDelete}
-              className="flex items-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              aria-label="Delete issue"
-            >
-              <FaTrash className="mr-2" />
-              Delete
-            </motion.button>
-          </div>
+<div className="flex gap-3">
+  <motion.button
+    onClick={openModal}
+    className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+    aria-label="Edit issue"
+  >
+    <FaEdit className="mr-2" />
+    Edit
+  </motion.button>
+  <motion.button
+    onClick={handleDelete}
+    className="flex items-center bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+    aria-label="Delete issue"
+  >
+    <FaTrash className="mr-2" />
+    Delete
+  </motion.button>
+</div>
+
         </motion.div>
         <p className="mt-6 text-center text-gray-300 text-sm">
           <Link
