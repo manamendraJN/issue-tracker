@@ -27,10 +27,10 @@ function IssueList() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="w-full max-w-5xl bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 lg:p-10"
+        className="w-full max-w-5xl bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 lg:p-10 mt-14"
       >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-white tracking-tight">Your Issues</h2>
@@ -88,20 +88,18 @@ function IssueList() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {issues.map((issue) => (
+              <Link to={`/issuedetail/${issue._id}`} key={issue._id}>
               <motion.div
                 key={issue._id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className="border border-gray-700 rounded-lg p-5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 mt-4"
               >
                 <h3 className="text-lg font-semibold text-white mb-2">
-                  <Link
-                    to={`/issuedetail/${issue._id}`}
-                    className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                  >
+
                     {issue.title}
-                  </Link>
+
                 </h3>
                 <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{issue.description}</p>
                 <div className="text-sm text-gray-400 flex flex-wrap gap-4">
@@ -149,6 +147,7 @@ function IssueList() {
                   </span>
                 </div>
               </motion.div>
+                                </Link>
             ))}
           </div>
         )}
@@ -166,7 +165,7 @@ function IssueList() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="relative w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl p-6 mt-14"
+                className="relative w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl p-6"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
